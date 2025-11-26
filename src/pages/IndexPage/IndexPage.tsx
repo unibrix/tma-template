@@ -21,6 +21,7 @@ export const IndexPage: FC = () => {
             before={
               <Avatar
                 size={48}
+                src={user?.photo_url}
                 acronym={user?.first_name?.charAt(0) || '?'}
               />
             }
