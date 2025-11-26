@@ -2,6 +2,8 @@
 
 Minimal starter for Telegram Mini Apps with React + TypeScript.
 
+**Stack:** React 18 · TypeScript · Vite · [@tma.js/sdk-react](https://docs.telegram-mini-apps.com/) · [Telegram UI](https://github.com/Telegram-Mini-Apps/TelegramUI)
+
 ## Quick Start
 
 ```bash
@@ -9,58 +11,87 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173/ to see the app running locally.
+Open http://localhost:5173/ — the app runs with a mock Telegram environment.
 
 ## Deploy to GitHub Pages
 
-1. Update base path in `vite.config.ts`:
-   ```ts
-   // github.com/YourUsername/your-repo → '/your-repo/'
-   base: command === 'serve' ? '/' : '/tma-react-starter/',
-   ```
+**1. Configure base path**
 
-2. Enable GitHub Pages:
-   - Go to repo **Settings → Pages**
-   - Source: **GitHub Actions**
+Edit `vite.config.ts` with your repo name:
+```ts
+// github.com/YourUsername/your-repo → '/your-repo/'
+base: command === 'serve' ? '/' : '/tma-react-starter/',
+```
 
-3. Push to `main` — deploys automatically
+**2. Enable GitHub Pages**
+
+Go to repo **Settings → Pages → Source: GitHub Actions**
+
+**3. Push to main**
+
+The GitHub Action builds and deploys automatically on every push.
 
 ## Connect to Telegram
 
-1. Create a bot via [@BotFather](https://t.me/BotFather) → `/newbot`
+**1. Create a bot**
 
-2. Configure the bot:
-   ```bash
-   cp .env.example .env
-   ```
+Open [@BotFather](https://t.me/BotFather) and send `/newbot`. Save the token.
 
-   Edit `.env`:
-   ```
-   BOT_TOKEN=your_token_from_botfather
-   APP_URL=https://yourusername.github.io/your-repo/
-   ```
+**2. Configure environment**
 
-3. Run setup:
-   ```bash
-   ./scripts/setup-bot.sh
-   ```
+```bash
+cp .env.example .env
+```
 
-4. Open your bot in Telegram and click the menu button!
+Edit `.env`:
+```
+BOT_TOKEN=your_token_from_botfather
+APP_URL=https://yourusername.github.io/your-repo/
+```
+
+**3. Run setup script**
+
+```bash
+./scripts/setup-bot.sh
+```
+
+**4. Test it**
+
+Open your bot in Telegram — click the menu button to launch the app!
+
+## SDK Features
+
+| Feature | Description |
+|---------|-------------|
+| `initData` | User info (name, username, photo, premium status) |
+| `themeParams` | Auto dark/light theme from Telegram |
+| `hapticFeedback` | Vibration feedback |
+| `backButton` | Native back navigation |
+| `mainButton` | Bottom action button |
+| `popup` | Native alert dialogs |
+| `cloudStorage` | Persist data across sessions |
 
 ## Project Structure
 
 ```
 src/
-├── components/     # App, Page, Root, ErrorBoundary
-├── pages/          # IndexPage (home)
-├── navigation/     # Route definitions
-├── init.ts         # SDK initialization
-└── mockEnv.ts      # Local dev mock
+├── components/
+│   ├── App.tsx           # Router + theme setup
+│   ├── Page.tsx          # Page wrapper with back button
+│   ├── Root.tsx          # Error boundary wrapper
+│   └── EnvUnsupported.tsx
+├── pages/
+│   └── IndexPage/        # Home page
+├── navigation/
+│   └── routes.tsx        # Route definitions
+├── init.ts               # SDK initialization
+├── mockEnv.ts            # Mock for local development
+└── vite-env.d.ts         # TypeScript env types
 ```
 
 ## Environment Variables
 
-Variables with `VITE_` prefix are available in code:
+App variables use `VITE_` prefix and are embedded at build time:
 
 ```bash
 # .env
@@ -68,12 +99,18 @@ VITE_API_URL=https://api.example.com
 ```
 
 ```ts
-// usage
+// In code
 const url = import.meta.env.VITE_API_URL
 ```
+
+For GitHub Actions, add secrets in **Settings → Secrets → Actions**.
 
 ## Resources
 
 - [Telegram Mini Apps Docs](https://core.telegram.org/bots/webapps)
-- [TMA.js SDK](https://docs.telegram-mini-apps.com/)
-- [Telegram UI](https://github.com/Telegram-Mini-Apps/TelegramUI)
+- [TMA.js SDK Documentation](https://docs.telegram-mini-apps.com/)
+- [Telegram UI Components](https://github.com/Telegram-Mini-Apps/TelegramUI)
+
+## License
+
+MIT
