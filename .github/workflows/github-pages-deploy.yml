@@ -1,4 +1,4 @@
-# Auto-deploy to GitHub Pages on push to main
+# Deploy to GitHub Pages on push to main
 name: Deploy to GitHub Pages
 
 on:
@@ -35,6 +35,10 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          # Add your VITE_* secrets here
+          # Example: VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: npm run build
 
       - name: Setup Pages
@@ -48,3 +52,26 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Configure Telegram Bot
+        if: ${{ secrets.BOT_TOKEN != '' }}
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          APP_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          echo "Configuring bot menu button..."
+          RESPONSE=$(curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/setChatMenuButton" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"menu_button\": {
+                \"type\": \"web_app\",
+                \"text\": \"Open App\",
+                \"web_app\": {\"url\": \"${APP_URL}\"}
+              }
+            }")
+          if echo "$RESPONSE" | grep -q '"ok":true'; then
+            echo "Bot menu button configured successfully"
+          else
+            echo "Warning: Failed to configure bot menu button"
+            echo "$RESPONSE"
+          fi
