@@ -6,6 +6,8 @@ import {
   init as initSDK,
   miniApp,
   backButton,
+  locationManager,
+  biometry,
 } from '@tma.js/sdk-react';
 
 /**
@@ -17,6 +19,8 @@ export async function init(debug: boolean): Promise<void> {
 
   backButton.mount.ifAvailable();
   initData.restore();
+  locationManager.mount.ifAvailable();
+  biometry.mount.ifAvailable();
 
   if (miniApp.mount.isAvailable()) {
     themeParams.mount();
