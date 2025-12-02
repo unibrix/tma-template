@@ -13,6 +13,19 @@ npm run dev
 
 Open http://localhost:5173/ — the app runs with a mock Telegram environment.
 
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server with mock TMA environment |
+| `npm run dev:https` | Start dev server with HTTPS (for ngrok) |
+| `npm run dev:tunnel` | Start dev + ngrok tunnel + auto-update bot URL |
+| `npm run build` | Type check + production build |
+| `npm run preview` | Preview production build locally |
+| `npm run lint` | Check code with ESLint |
+| `npm run lint:fix` | Auto-fix ESLint issues |
+| `npm run deploy` | Deploy to GitHub Pages |
+
 ## Development with ngrok
 
 Test on a real device with auto bot URL updates:
@@ -36,9 +49,15 @@ base: command === 'serve' ? '/' : '/your-repo/',
 
 Go to repo **Settings → Pages → Source: GitHub Actions**
 
-**3. Push to main**
+**3. Set up secrets** (optional)
 
-The GitHub Action builds and deploys automatically.
+If your app uses environment variables, add them in **Settings → Secrets and variables → Actions**:
+- `VITE_API_URL` - Your API endpoint
+- Any other `VITE_*` variables your app needs
+
+**4. Push to main**
+
+Each commit to `main` automatically triggers a build and deploy via GitHub Actions.
 
 ## Connect to Telegram
 
